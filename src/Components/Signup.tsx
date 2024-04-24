@@ -1,6 +1,6 @@
 import { useFormik } from "formik";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 const Signup = () => {
   const navigate = useNavigate();
   const [success, setSuccess] = useState(null);
@@ -206,11 +206,7 @@ const Signup = () => {
                     {message}
                   </p>
                 )}
-                <label className="label flex justify-center">
-                  <Link to="/login" className="label-text-alt link link-hover">
-                    Already Have an account? Login
-                  </Link>
-                </label>
+
                 {/* <div className="divider">OR</div> */}
               </div>
             </form>
