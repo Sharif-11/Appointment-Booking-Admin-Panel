@@ -1,34 +1,34 @@
 import { useState } from "react";
+import axiosInstance from "../Axios/axios";
 import loginSchema from "../formValidator/login.yup";
 import CustomField from "./Formik/CustomField";
 import CustomForm from "./Formik/CustomForm";
 
-const Login = () => {
+const Login = ({ setShowPage }) => {
   // const {user,setUser}=useContext(UserContext)
-  const [status, setStatus] = useState(null);
+  const [status, setStatus] = useState<boolean | null>(null);
   const [message, setMessage] = useState("");
-  //   const navigate = useNavigate();
-
   const initialValues = {
-    phoneNo: "01865926160",
+    phoneNo: "01776775495",
     password: "123456",
   };
-  const handleSubmit = async (values) => {
-    // await axios.post(rootUrl+'user/login',values,{withCredentials:true})
-    //  .then(({data})=>{
-    //     if(data.status){
-    //         const {token,...others}=data.data
-    //         setUser(others)
-    //         localStorage.setItem('token',token)
-    //         setStatus(true);
-    //         navigate('../')
-    //     }
-    //  })
-    //  .catch((err)=>{
-    //      const {message}=err.response.data
-    //       setStatus(false);
-    //       setMessage(message)
-    //  })
+  const handleSubmit = async (values: any) => {
+    await axiosInstance
+      .post("/user/login", values)
+      .then(({ data }) => {
+        if (data.status) {
+          // const { token, ...others } = data.data;
+          // setUser(others);
+          // localStorage.setItem("token", token);
+          setStatus(true);
+          setShowPage({ signup: false, login: false, dashboard: true });
+        }
+      })
+      .catch((err) => {
+        const { message } = err.response.data;
+        setStatus(false);
+        setMessage(message);
+      });
   };
   return (
     <div className="m-7 mt-24">

@@ -1,7 +1,9 @@
 import { useFormik } from "formik";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-const Signup = () => {
+import axiosInstance from "../Axios/axios";
+import signupSchema from "../formValidator/signup.yup";
+const Signup = ({ setShowPage }) => {
   const navigate = useNavigate();
   const [success, setSuccess] = useState(null);
   const [message, setMessage] = useState("");
@@ -14,9 +16,21 @@ const Signup = () => {
       phoneNo: "",
       confirmPassword: "",
       designation: "",
-      aboutMe: "",
+      aboutMe: "Hello I am a Doctor",
     },
-    onSubmit: async (values) => {},
+    validationSchema: signupSchema,
+    onSubmit: async (values) => {
+      const { confirmPassword, ...registrationData } = values;
+      await axiosInstance
+        .post("/user/doctor", registrationData)
+        .then(({ data }) => {
+          if (data?.status) {
+            localStorage.setItem("doctorExist", "yes");
+            setShowPage({ signup: false, login: true, dashboard: false });
+          }
+        })
+        .catch(() => {});
+    },
   });
   console.log({ success });
   return (
