@@ -1,14 +1,21 @@
 import App from "../App";
-import Login from "../Components/Login";
+import AdminScheduleTimings from "../Components/AdminScheduleTimings";
+import Dashboard from "../Components/Dashboard";
 
 const mainRouter = [
   {
     path: "/",
     element: <App />,
-  },
-  {
-    path: "/login",
-    element: <Login />,
+    children: [
+      {
+        path: "dashboard",
+        element: <Dashboard />,
+      },
+      {
+        path: "schedule",
+        element: <AdminScheduleTimings />,
+      },
+    ],
   },
 ];
 

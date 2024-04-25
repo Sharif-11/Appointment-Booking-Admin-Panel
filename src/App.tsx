@@ -1,11 +1,14 @@
-import { useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { HashLoader } from "react-spinners";
 import "./App.css";
 import axiosInstance from "./Axios/axios";
 import Admin from "./Components/Admin";
 import Login from "./Components/Login";
 import Signup from "./Components/Signup";
+import { Doctor } from "./Interfaces/Doctor";
+export const UserContext = createContext<any>(null);
 function App() {
+  const [user, setUser] = useState<Doctor | null>(null);
   const [showPage, setShowPage] = useState({
     signup: false,
     login: false,
@@ -32,18 +35,22 @@ function App() {
         );
     }
   }, []);
-  console.log(showPage);
+  useEffect(() => {}, []);
   return (
-    <div>
-      {!(showPage.signup || showPage.login || showPage.dashboard) && (
-        <div className="flex justify-center items-center w-[100vw] h-[100vh]">
-          <HashLoader color="#36d7b7" size={250} />
-        </div>
-      )}
-      {showPage.signup === true && <Signup setShowPage={setShowPage} />}
-      {showPage.login === true && <Login setShowPage={setShowPage} />}
-      {showPage.dashboard === true && <Admin />}
-    </div>
+    <UserContext.Provider value={{ user, setUser }}>
+      <div>
+        {!(showPage.signup || showPage.login || showPage.dashboard) && (
+          <div className="flex justify-center items-center w-[100vw] h-[100vh]">
+            <HashLoader color="#36d7b7" size={250} />
+          </div>
+        )}
+        {showPage.signup === true && <Signup setShowPage={setShowPage} />}
+        {(showPage.login === true || !user) && (
+          <Login setShowPage={setShowPage} />
+        )}
+        {showPage.dashboard === true && <Admin setShowPage={setShowPage} />}
+      </div>
+    </UserContext.Provider>
   );
 }
 

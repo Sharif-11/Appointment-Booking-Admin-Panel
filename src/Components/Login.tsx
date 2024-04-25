@@ -1,11 +1,23 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { UserContext } from "../App";
 import axiosInstance from "../Axios/axios";
 import loginSchema from "../formValidator/login.yup";
 import CustomField from "./Formik/CustomField";
 import CustomForm from "./Formik/CustomForm";
 
-const Login = ({ setShowPage }) => {
+const Login = ({
+  setShowPage,
+}: {
+  setShowPage: React.Dispatch<
+    React.SetStateAction<{
+      signup: boolean;
+      login: boolean;
+      dashboard: boolean;
+    }>
+  >;
+}) => {
   // const {user,setUser}=useContext(UserContext)
+  const { setUser, user } = useContext(UserContext);
   const [status, setStatus] = useState<boolean | null>(null);
   const [message, setMessage] = useState("");
   const initialValues = {
@@ -17,8 +29,9 @@ const Login = ({ setShowPage }) => {
       .post("/user/login", values)
       .then(({ data }) => {
         if (data.status) {
-          // const { token, ...others } = data.data;
-          // setUser(others);
+          const { token, ...others } = data.data;
+          console.log(others);
+          setUser(others);
           // localStorage.setItem("token", token);
           setStatus(true);
           setShowPage({ signup: false, login: false, dashboard: true });

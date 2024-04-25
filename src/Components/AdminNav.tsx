@@ -1,39 +1,48 @@
+import { useContext } from "react";
 import { BsClockFill } from "react-icons/bs";
-import { FaCalendar } from "react-icons/fa";
+import { FaCalendar, FaSignOutAlt } from "react-icons/fa";
 import { MdManageAccounts } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { RxDashboard } from "react-icons/rx";
 import { Link, NavLink } from "react-router-dom";
-const AdminNav = () => {
+import { UserContext } from "../App";
+import axiosInstance from "../Axios/axios";
+const AdminNav = ({
+  setShowPage,
+}: {
+  setShowPage: React.Dispatch<
+    React.SetStateAction<{
+      signup: boolean;
+      login: boolean;
+      dashboard: boolean;
+    }>
+  >;
+}) => {
+  const { setUser, user } = useContext(UserContext);
   const handleLogout = async () => {
-    // await axios
-    //   .post(rootUrl + "user/logout", {}, { withCredentials: true })
-    //   .then(() => {
-    //     setUser(null);
-    //   });
+    await axiosInstance.post("/user/logout", {}).then(() => {
+      setUser(null);
+      setShowPage({ login: true, signup: false, dashboard: false });
+    });
   };
+  console.log(user);
   return (
     <div className="bg-white border-2 rounded-2xl row-span-3  divide-y h-[100%] w-[375px]">
       {/* navigation */}
       <div className="text-center mt-8">
-        <Link to="admin/admin-profile-settings" className="avatar">
+        <Link to="/" className="avatar">
           <div className="w-24 rounded-full ring-4 ring-success ring-offset ring-offset-2">
             <img src="https://placekitten.com/g/200/202" />
           </div>
         </Link>
-        <Link
-          to="admin/admin-profile-settings"
-          style={{ textDecoration: "none", color: "black" }}
-        >
-          <h2 className="text-xl font-semibold">Dr. Meow Cat</h2>
-          <small className="text-muted">
-            MBBS, MCM, MD - (Medicine Specialist)
-          </small>
+        <Link to="/" style={{ textDecoration: "none", color: "black" }}>
+          <h2 className="text-xl font-semibold">{user?.name}</h2>
+          <small className="text-muted">{user?.designation}</small>
         </Link>
       </div>
       <div className="flex flex-col divide-y m-5 mt-16">
         <NavLink
-          to="admin/dashboard"
+          to="dashboard"
           //activeClassName="active
           className={({ isActive }) =>
             isActive
@@ -45,7 +54,7 @@ const AdminNav = () => {
         </NavLink>
 
         <NavLink
-          to="admin/admin-schedule-timings"
+          to="schedule"
           className={({ isActive }) =>
             isActive
               ? "p-3  active flex items-center"
@@ -55,7 +64,7 @@ const AdminNav = () => {
           <BsClockFill className="me-3"></BsClockFill> Schedule Timings
         </NavLink>
         <NavLink
-          to="admin/admin-appointment"
+          to="appointment"
           className={({ isActive }) =>
             isActive
               ? "p-3  active flex items-center"
@@ -66,7 +75,7 @@ const AdminNav = () => {
         </NavLink>
 
         <NavLink
-          to="admin/admin-profile-settings"
+          to="settings"
           className={({ isActive }) =>
             isActive
               ? "p-3 active flex items-center"
@@ -78,7 +87,7 @@ const AdminNav = () => {
         </NavLink>
 
         <NavLink
-          to="admin/admin-change-password"
+          to="change-password"
           className={({ isActive }) =>
             isActive
               ? "p-3 active flex items-center"
@@ -89,7 +98,8 @@ const AdminNav = () => {
           Password
         </NavLink>
 
-        {/* <NavLink
+        <NavLink
+          to="/"
           className={({ isActive }) =>
             isActive
               ? "p-3 active flex items-center"
@@ -98,7 +108,7 @@ const AdminNav = () => {
         >
           <FaSignOutAlt className="me-3"></FaSignOutAlt>{" "}
           <span onClick={handleLogout}>Logout</span>
-        </NavLink> */}
+        </NavLink>
       </div>
     </div>
   );

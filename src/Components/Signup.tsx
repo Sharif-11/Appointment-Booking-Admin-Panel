@@ -1,11 +1,19 @@
 import { useFormik } from "formik";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import axiosInstance from "../Axios/axios";
 import signupSchema from "../formValidator/signup.yup";
-const Signup = ({ setShowPage }) => {
-  const navigate = useNavigate();
-  const [success, setSuccess] = useState(null);
+const Signup = ({
+  setShowPage,
+}: {
+  setShowPage: React.Dispatch<
+    React.SetStateAction<{
+      signup: boolean;
+      login: boolean;
+      dashboard: boolean;
+    }>
+  >;
+}) => {
+  const [success, setSuccess] = useState<boolean | null>(null);
   const [message, setMessage] = useState("");
   const formik = useFormik({
     initialValues: {
@@ -20,19 +28,25 @@ const Signup = ({ setShowPage }) => {
     },
     validationSchema: signupSchema,
     onSubmit: async (values) => {
+      setMessage("");
+      setSuccess(null);
       const { confirmPassword, ...registrationData } = values;
       await axiosInstance
         .post("/user/doctor", registrationData)
         .then(({ data }) => {
           if (data?.status) {
+            setSuccess(true);
+            setMessage(data?.message);
             localStorage.setItem("doctorExist", "yes");
             setShowPage({ signup: false, login: true, dashboard: false });
           }
         })
-        .catch(() => {});
+        .catch((err) => {
+          setSuccess(false);
+          setMessage(err?.message);
+        });
     },
   });
-  console.log({ success });
   return (
     <div className="m-7 my-auto">
       <div className="hero">
