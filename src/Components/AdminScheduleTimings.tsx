@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { HiPlusCircle } from "react-icons/hi";
 import { RxCrossCircled } from "react-icons/rx";
+import axiosInstance from "../Axios/axios";
 import timeSchema from "../formValidator/timeRange.yup";
+import convertToAMPMFormat from "../utils/time.utils";
 import CustomField from "./Formik/CustomField";
 import CustomForm from "./Formik/CustomForm";
 
@@ -20,91 +22,67 @@ const AdminScheduleTimings = () => {
   const [loading, setLoading] = useState(true);
   const [modal, setModal] = useState(false);
   const [error, setError] = useState(null);
-  // const [slots, setSlots] = useState([{ startTime: "08:00AM", endTime: "10:00AM" },
-  // { startTime: "04:00PM", endTime: "10:00PM" },
-  // { startTime: "01:00PM", endTime: "05:00PM" },
-  // { startTime: "06:00PM", endTime: "09:00PM" },
-  // { startTime: "06:00PM", endTime: "09:00PM" },
-  // { startTime: "06:00PM", endTime: "09:00PM" }])
-  const [slots, setSlots] = useState([]);
+  const [slots, setSlots] = useState<any[]>([]);
   useEffect(() => {
-    // setLoading(true);
-    // axios
-    //   .post(
-    //     rootUrl + "doctor/slots",
-    //     { weekDay: daysOfWeek[weekDay] },
-    //     { withCredentials: true }
-    //   )
-    //   .then(({ data }) => setSlots(data.data))
-    //   .catch((err) => {
-    //     console.log(err);
-    //     setSlots([]);
-    //   });
-    // setLoading(false);
+    setLoading(true);
+    axiosInstance
+      .post("/doctor/slots", { weekDay: daysOfWeek[weekDay] })
+      .then(({ data }) => setSlots(data.data))
+      .catch((err) => {
+        setSlots([]);
+      });
+    setLoading(false);
   }, [weekDay]);
   const handleDeleteSlot = async (index) => {
-    // setLoading(true);
-    // await axios
-    //   .delete(rootUrl + "doctor/slot/" + slots[index]._id, {
-    //     withCredentials: true,
-    //   })
-    //   .then(
-    //     ({ data }) =>
-    //       data.status && setSlots([...slots.filter((_, i) => i !== index)])
-    //   );
-    // setLoading(false);
+    setLoading(true);
+    await axiosInstance
+      .delete("/doctor/slot/" + slots[index]._id)
+      .then(
+        ({ data }) =>
+          data.status && setSlots([...slots.filter((_, i) => i !== index)])
+      );
+    setLoading(false);
   };
   const initialValues = {
-    startTime: "00:00",
-    endTime: "00:00",
-    bookingStartTime: "00:00",
-    bookingEndTime: "00:00",
-    capacity: 5,
-    visitingFee: 100,
+    startTime: "09:00",
+    endTime: "11:00",
+    bookingStartTime: "08:00",
+    bookingEndTime: "08:30",
+    capacity: 50,
+    visitingFee: 1000,
   };
   const handleSubmit = (values) => {
-    // setError(null);
-    // console.log(values);
-    // let { startTime, endTime, bookingStartTime, bookingEndTime } = values;
-    // startTime = convertToAMPMFormat(startTime);
-    // endTime = convertToAMPMFormat(endTime);
-    // bookingStartTime = convertToAMPMFormat(bookingStartTime);
-    // bookingEndTime = convertToAMPMFormat(bookingEndTime);
-    // axios
-    //   .post(
-    //     rootUrl + "doctor/slot",
-    //     {
-    //       ...values,
-    //       startTime,
-    //       endTime,
-    //       bookingEndTime,
-    //       bookingStartTime,
-    //       weekDay: daysOfWeek[weekDay],
-    //     },
-    //     { withCredentials: true }
-    //   )
-    //   .then(({ data }) => {
-    //     if (data?.status) {
-    //       data.data.startTime = convertToAMPMFormat(data.data.startTime);
-    //       data.data.endTime = convertToAMPMFormat(data.data.endTime);
-    //       setSlots([...slots, data.data]);
-    //       setModal(false);
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     setError(err.response.data.message);
-    //   });
-    // event.preventDefault();
-    // const form = event.target;
-    // const newStartTime = form.querySelector('#start-time').value;
-    // const newEndTime = form.querySelector('#end-time').value;
-    // const newSlot = { startTime: newStartTime, endTime: newEndTime };
-    // const updatedSlots = [...slots, newSlot];
-    // // console.log(updatedSlots);
-    // setSlots(updatedSlots);
+    setError(null);
+    console.log(values);
+    let { startTime, endTime, bookingStartTime, bookingEndTime } = values;
+    startTime = convertToAMPMFormat(startTime);
+    endTime = convertToAMPMFormat(endTime);
+    bookingStartTime = convertToAMPMFormat(bookingStartTime);
+    bookingEndTime = convertToAMPMFormat(bookingEndTime);
+    axiosInstance
+      .post("/doctor/slot", {
+        ...values,
+        startTime,
+        endTime,
+        bookingEndTime,
+        bookingStartTime,
+        weekDay: daysOfWeek[weekDay],
+      })
+      .then(({ data }) => {
+        if (data?.status) {
+          data.data.startTime = convertToAMPMFormat(data.data.startTime);
+          data.data.endTime = convertToAMPMFormat(data.data.endTime);
+          setSlots([...slots, data.data]);
+          setModal(false);
+        }
+      })
+      .catch((err) => {
+        setError(err.response.data.message);
+      });
   };
+  console.log(slots);
   return (
-    <div className="flex justify-center items-center w-[100%] h-[100%] border-2">
+    <div className="flex justify-center items-center w-[100%] h-[100%]">
       <div>
         <h2 className="text-center font-bold text-xl py-2">Schedule Timings</h2>
         <div className="border-spacing-4 p-5 border-2 rounded-md my-5">
@@ -326,6 +304,11 @@ const AdminScheduleTimings = () => {
                     </div>
                   );
                 }
+              )}
+              {slots.length === 0 && (
+                <h2 className="mx-auto font-[600] text-xl">
+                  There is no schedule
+                </h2>
               )}
             </div>
           </div>

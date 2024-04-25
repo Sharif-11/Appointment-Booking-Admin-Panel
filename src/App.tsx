@@ -35,7 +35,9 @@ function App() {
         );
     }
   }, []);
-  useEffect(() => {}, []);
+  useEffect(() => {
+      
+  }, []);
   return (
     <UserContext.Provider value={{ user, setUser }}>
       <div>
