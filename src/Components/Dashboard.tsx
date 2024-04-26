@@ -8,7 +8,7 @@ const Dashboard = () => {
       <h2 className="text-center mx-auto text-3xl font-[600]">
         Basic Information
       </h2>
-      <div className="mt-12">
+      <div className="mt-12 w-[650px]">
         <p>Name: {user?.name}</p>
         <p>Email: {user?.email}</p>
         <p>Phone Number: {user?.phoneNo}</p>
