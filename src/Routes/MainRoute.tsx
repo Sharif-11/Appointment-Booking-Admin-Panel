@@ -1,6 +1,7 @@
 import App from "../App";
 import AdminScheduleTimings from "../Components/AdminScheduleTimings";
 import ChangePassword from "../Components/ChangePassword";
+import CreateAppointment from "../Components/CreateAppointment";
 import Dashboard from "../Components/Dashboard";
 import ProfileSettings from "../Components/ProfileSettings";
 
@@ -28,6 +29,10 @@ const mainRouter = [
       {
         path: "settings",
         element: <ProfileSettings />,
+      },
+      {
+        path: "appointment",
+        element: <CreateAppointment />,
       },
     ],
   },

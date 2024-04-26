@@ -35,9 +35,17 @@ function App() {
         );
     }
   }, []);
-  useEffect(() => {
-      
-  }, []);
+  useEffect(() => {}, []);
+  const options = {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    timeZone: "Asia/Dhaka",
+  };
+  const today = new Date().toLocaleDateString("en-US", options);
+  console.log(today);
+
   return (
     <UserContext.Provider value={{ user, setUser }}>
       <div>
