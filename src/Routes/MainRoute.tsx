@@ -1,5 +1,6 @@
 import App from "../App";
 import AdminScheduleTimings from "../Components/AdminScheduleTimings";
+import ChangePassword from "../Components/ChangePassword";
 import Dashboard from "../Components/Dashboard";
 
 const mainRouter = [
@@ -14,6 +15,10 @@ const mainRouter = [
       {
         path: "schedule",
         element: <AdminScheduleTimings />,
+      },
+      {
+        path: "change-password",
+        element: <ChangePassword />,
       },
     ],
   },
