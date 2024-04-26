@@ -6,6 +6,7 @@ import CustomField from "./Formik/CustomField";
 import CustomForm from "./Formik/CustomForm";
 const ChangePassword = () => {
   const [message, setMessage] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<boolean | null>(null);
   const initialValues = {
     password: "",
@@ -21,14 +22,17 @@ const ChangePassword = () => {
   }) => {
     setStatus(null);
     setMessage(null);
+    setLoading(true);
     axiosInstance
       .patch("/user/password", { password, oldPassword })
       .then(({ data }) => {
         setStatus(data.status);
+        setLoading(false);
         data.status && setMessage(data.message);
       })
       .catch((err) => {
         setStatus(false);
+        setLoading(false);
         setMessage(err.response.data.message);
       });
   };
@@ -61,7 +65,7 @@ const ChangePassword = () => {
           className="input input-bordered"
         />
         <button type="submit" className="my-4 btn glass bg-success text-white">
-          Save Changes
+          {loading ? "Saving..." : "Save Changes"}
         </button>
       </CustomForm>
       {status ? (
