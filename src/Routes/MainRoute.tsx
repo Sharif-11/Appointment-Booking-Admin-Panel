@@ -3,6 +3,7 @@ import AdminScheduleTimings from "../Components/AdminScheduleTimings";
 import ChangePassword from "../Components/ChangePassword";
 import CreateAppointment from "../Components/CreateAppointment";
 import Dashboard from "../Components/Dashboard";
+import ManageAppointments from "../Components/ManageAppointments";
 import ProfileSettings from "../Components/ProfileSettings";
 
 const mainRouter = [
@@ -33,6 +34,10 @@ const mainRouter = [
       {
         path: "appointment",
         element: <CreateAppointment />,
+      },
+      {
+        path: "manage-appointment",
+        element: <ManageAppointments />,
       },
     ],
   },

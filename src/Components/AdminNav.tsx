@@ -73,6 +73,16 @@ const AdminNav = ({
         >
           <FaCalendar className="me-3"></FaCalendar>Create Appointment
         </NavLink>
+        <NavLink
+          to="manage-appointment"
+          className={({ isActive }) =>
+            isActive
+              ? "p-3  active flex items-center"
+              : "items-center flex p-3 text-slate-400"
+          }
+        >
+          <FaCalendar className="me-3"></FaCalendar>Manage Appointment
+        </NavLink>
 
         <NavLink
           to="settings"
