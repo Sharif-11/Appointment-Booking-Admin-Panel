@@ -9,6 +9,7 @@ const Appointment = ({
   bookingEndTime,
   appointmentAction,
   _id,
+  status,
   setRefresh,
 }: {
   startTime: string;
@@ -16,21 +17,29 @@ const Appointment = ({
   bookingEndTime: string;
   bookingStartTime: string;
   appointmentAction: string;
+  status: string;
   _id: string;
   setRefresh: any;
 }) => {
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
   const appointmentHandler = async (action: string) => {
     setLoading(true);
+    setMessage("");
     await axiosInstance[action === "delete" ? "delete" : "patch"](
       `/doctor/appointment/${action}-appointment/${_id}`,
       {}
     )
       .then(({ data }) => {
         data?.status && setRefresh((v: boolean | null) => !v);
+        setMessage(data?.message);
         setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+        setMessage(err?.response?.data?.message);
+      });
   };
   return (
     <div className="card my-3 shadow-xl w-[40%] p-8">
@@ -45,9 +54,17 @@ const Appointment = ({
       <button
         className="btn btn-info mt-5 capitalize"
         onClick={() => appointmentHandler(appointmentAction)}
+        disabled={appointmentAction == null}
       >
-        {loading ? <SyncLoader size={10}></SyncLoader> : appointmentAction}
+        {loading ? (
+          <SyncLoader size={10}></SyncLoader>
+        ) : appointmentAction == null ? (
+          status
+        ) : (
+          appointmentAction
+        )}
       </button>
+      <p className="mx-auto text-xs mt-2 text-red-500">{message}</p>
     </div>
   );
 };
