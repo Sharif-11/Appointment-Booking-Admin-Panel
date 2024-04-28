@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { SyncLoader } from "react-spinners";
 import axiosInstance from "../Axios/axios";
 
@@ -23,6 +24,7 @@ const Appointment = ({
 }) => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const navigate = useNavigate();
   const appointmentHandler = async (action: string) => {
     setLoading(true);
     setMessage("");
@@ -51,19 +53,28 @@ const Appointment = ({
       <p className="text-md italic text-[green]">
         {bookingStartTime} - {bookingEndTime}
       </p>
-      <button
-        className="btn btn-info mt-5 capitalize"
-        onClick={() => appointmentHandler(appointmentAction)}
-        disabled={appointmentAction == null}
-      >
-        {loading ? (
-          <SyncLoader size={10}></SyncLoader>
-        ) : appointmentAction == null ? (
-          status
-        ) : (
-          appointmentAction
-        )}
-      </button>
+      {status === "running" ? (
+        <button
+          className="btn btn-info mt-5 capitalize"
+          onClick={() => navigate(`/patient-queue/${_id}`)}
+        >
+          View Patient Queue
+        </button>
+      ) : (
+        <button
+          className="btn btn-info mt-5 capitalize"
+          onClick={() => appointmentHandler(appointmentAction)}
+          disabled={appointmentAction == null}
+        >
+          {loading ? (
+            <SyncLoader size={10}></SyncLoader>
+          ) : appointmentAction == null ? (
+            status
+          ) : (
+            appointmentAction
+          )}
+        </button>
+      )}
       <p className="mx-auto text-xs mt-2 text-red-500">{message}</p>
     </div>
   );

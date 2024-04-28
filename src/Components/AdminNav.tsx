@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { BsClockFill } from "react-icons/bs";
-import { FaCalendar, FaSignOutAlt } from "react-icons/fa";
+import { FaCalendar, FaSignOutAlt, FaUsers } from "react-icons/fa";
 import { MdManageAccounts } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { RxDashboard } from "react-icons/rx";
@@ -82,6 +82,16 @@ const AdminNav = ({
           }
         >
           <FaCalendar className="me-3"></FaCalendar>Manage Appointment
+        </NavLink>
+        <NavLink
+          to="patient-queue"
+          className={({ isActive }) =>
+            isActive
+              ? "p-3  active flex items-center"
+              : "items-center flex p-3 text-slate-400"
+          }
+        >
+          <FaUsers className="me-3"></FaUsers>Patient Queue
         </NavLink>
 
         <NavLink

@@ -1,4 +1,5 @@
 import { useContext, useState } from "react";
+import { HashLoader } from "react-spinners";
 import { UserContext } from "../App";
 import axiosInstance from "../Axios/axios";
 import loginSchema from "../formValidator/login.yup";
@@ -20,11 +21,13 @@ const Login = ({
   const { setUser, user } = useContext(UserContext);
   const [status, setStatus] = useState<boolean | null>(null);
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
   const initialValues = {
     phoneNo: "01776775495",
     password: "123456",
   };
   const handleSubmit = async (values: any) => {
+    setLoading(true);
     await axiosInstance
       .post("/user/login", values)
       .then(({ data }) => {
@@ -34,6 +37,7 @@ const Login = ({
           setUser(others);
           // localStorage.setItem("token", token);
           setStatus(true);
+          setLoading(false);
           setShowPage({ signup: false, login: false, dashboard: true });
         }
       })
@@ -41,6 +45,7 @@ const Login = ({
         const { message } = err.response.data;
         setStatus(false);
         setMessage(message);
+        setLoading(false);
       });
   };
   return (
@@ -71,12 +76,13 @@ const Login = ({
                 className="bg-white w-full input input-bordered"
                 placeholder="Enter Password"
               />
+
               <div className="form-control mt-6">
                 <button
                   className="btn bg-success glass text-white"
                   type="submit"
                 >
-                  Login
+                  {loading ? <HashLoader size={15} /> : "Login"}
                 </button>
               </div>
             </CustomForm>

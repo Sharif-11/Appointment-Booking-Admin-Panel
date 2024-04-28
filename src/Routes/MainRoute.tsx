@@ -4,6 +4,7 @@ import ChangePassword from "../Components/ChangePassword";
 import CreateAppointment from "../Components/CreateAppointment";
 import Dashboard from "../Components/Dashboard";
 import ManageAppointments from "../Components/ManageAppointments";
+import PatientQueue from "../Components/PatientQueue";
 import ProfileSettings from "../Components/ProfileSettings";
 
 const mainRouter = [
@@ -38,6 +39,14 @@ const mainRouter = [
       {
         path: "manage-appointment",
         element: <ManageAppointments />,
+      },
+      {
+        path: "patient-queue/:appointmentId",
+        element: <PatientQueue />,
+      },
+      {
+        path: "*",
+        element: <Dashboard />,
       },
     ],
   },
