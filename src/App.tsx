@@ -61,8 +61,6 @@ function App() {
       .catch(() => {
         setShowPage({ signup: true, login: false, dashboard: false });
       });
-  }, []);
-  useEffect(() => {
     axiosInstance
       .get("/user/login")
       .then(({ data }: { data: any }) => {
