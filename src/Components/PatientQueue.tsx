@@ -19,11 +19,18 @@ const PatientQueue = () => {
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, []);
-
+  }, [refresh]);
+  const changeServiceStatus = (id: string) => {
+    const confirmation = window.confirm("Do you want to continue?");
+    if (!confirmation) return;
+    axiosInstance
+      .patch(`/doctor/patient-queue/${id}`)
+      .then(() => setRefresh((v) => !v));
+  };
+  // console.log(bookings.length ? bookings[0] : {});
   return (
     <div>
-      <h1 className="my-4 text-center text-2xl">Patient Queue</h1>
+      <h1 className="my-4 text-center text-2xl mb-10">Patient Queue</h1>
       <div className="overflow-x-auto rounded-md">
         <table className="w-full bg-white shadow-md rounded-lg">
           <thead className="bg-blue-500 text-white">
@@ -44,7 +51,7 @@ const PatientQueue = () => {
           ) : (
             <tbody>
               {bookings?.map(
-                ({ name, email, serviceStatus, dateOfBirth }, index) => (
+                ({ name, email, serviceStatus, dateOfBirth, _id }, index) => (
                   <tr
                     key={index}
                     className={index % 2 === 0 ? "bg-gray-200" : "bg-gray-100"}
@@ -58,6 +65,7 @@ const PatientQueue = () => {
                       <button
                         className="btn btn-sm btn-success btn-outline mt-1 capitalize text-xs"
                         disabled={serviceStatus === "served"}
+                        onClick={() => changeServiceStatus(_id)}
                       >
                         {serviceStatus}
                       </button>

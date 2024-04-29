@@ -19,7 +19,13 @@ const CreateAppointment = () => {
       <p className="text-center font-[700] text-xl my-16">
         Slots Available today
       </p>
-      {loading ? <HashLoader size={100}></HashLoader> : <Slots slots={slots} />}
+      {loading ? (
+        <HashLoader size={100}></HashLoader>
+      ) : slots.length === 0 ? (
+        <h4 className="text-center text-2xl font-semibold">There is no data</h4>
+      ) : (
+        <Slots slots={slots} />
+      )}
     </div>
   );
 };

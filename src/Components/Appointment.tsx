@@ -53,7 +53,7 @@ const Appointment = ({
       <p className="text-md italic text-[green]">
         {bookingStartTime} - {bookingEndTime}
       </p>
-      {status === "running" ? (
+      {status === "running" && appointmentAction !== "close" ? (
         <button
           className="btn btn-info mt-5 capitalize"
           onClick={() => navigate(`/patient-queue/${_id}`)}
