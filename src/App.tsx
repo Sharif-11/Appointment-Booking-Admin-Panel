@@ -78,14 +78,17 @@ function App() {
   return (
     <UserContext.Provider value={{ user, setUser }}>
       <div>
-        {loading && (
+        {loading ? (
           <div className="flex justify-center items-center w-[100vw] h-[100vh]">
             <HashLoader color="#36d7b7" size={250} />
           </div>
+        ) : (
+          <>
+            {showPage.signup === true && <Signup setShowPage={setShowPage} />}
+            {showPage.login === true && <Login setShowPage={setShowPage} />}
+            {showPage.dashboard === true && <Admin setShowPage={setShowPage} />}
+          </>
         )}
-        {showPage.signup === true && <Signup setShowPage={setShowPage} />}
-        {showPage.login === true && <Login setShowPage={setShowPage} />}
-        {showPage.dashboard === true && <Admin setShowPage={setShowPage} />}
       </div>
     </UserContext.Provider>
   );
