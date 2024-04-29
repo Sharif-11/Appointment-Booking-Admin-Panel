@@ -29,7 +29,11 @@ const ManageAppointments = () => {
           <HashLoader size={150} />{" "}
         </div>
       )}
-      <Appointments appointments={appointments} setRefresh={setRefresh} />
+      {appointments.length === 0 ? (
+        <h1 className="text-center text-xl">There is no appointments</h1>
+      ) : (
+        <Appointments appointments={appointments} setRefresh={setRefresh} />
+      )}
     </div>
   );
 };

@@ -9,47 +9,78 @@ import { Doctor } from "./Interfaces/Doctor";
 export const UserContext = createContext<any>(null);
 function App() {
   const [user, setUser] = useState<Doctor | null>(null);
+  const [loading, setLoading] = useState(true);
   const [showPage, setShowPage] = useState({
     signup: false,
     login: false,
     dashboard: false,
   });
   useEffect(() => {
-    const doctorExist = localStorage.getItem("doctorExist");
-    if (doctorExist === "yes") {
-      setShowPage({ signup: false, login: true, dashboard: false });
-    } else {
-      axiosInstance
-        .get("/doctor-info")
-        .then(({ data }) => {
-          if (data?.data) {
-            localStorage.setItem("doctorExist", "yes");
-            setShowPage({ signup: false, login: true, dashboard: false });
-          } else {
-            setShowPage({ signup: true, login: false, dashboard: false });
-            localStorage.removeItem("doctorExist");
-          }
-        })
-        .catch(() =>
-          setShowPage({ signup: true, login: false, dashboard: false })
-        );
-    }
+    // const doctor = localStorage.getItem("doctor");
+    // if (doctor == null) {
+    //   axiosInstance
+    //     .get("/user/login")
+    //     .then(({ data }: { data: any }) => {
+    //       if (data?.status) {
+    //         setUser(data?.data);
+    //         localStorage.setItem("doctor", JSON.stringify(data?.data));
+    //         setShowPage({ dashboard: true, signup: false, login: false });
+    //       }
+    //     })
+    //     .catch(() => {
+    //       axiosInstance
+    //         .get("/doctor-info")
+    //         .then(({ data }) => {
+    //           if (data?.data) {
+    //             localStorage.setItem("doctorExist", "yes");
+    //             setShowPage({ signup: false, login: true, dashboard: false });
+    //           } else {
+    //             setShowPage({ signup: true, login: false, dashboard: false });
+    //             localStorage.removeItem("doctorExist");
+    //           }
+    //         })
+    //         .catch(() =>
+    //           setShowPage({ signup: true, login: false, dashboard: false })
+    //         );
+    //     });
+    // } else {
+    //   setUser(JSON.parse(doctor as string));
+    //   setShowPage({ signup: false, login: false, dashboard: true });
+    // }
   }, []);
-  useEffect(() => {}, []);
-  const options = {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    timeZone: "Asia/Dhaka",
-  };
-  const today = new Date().toLocaleDateString("en-US", options);
-  console.log(today);
+  useEffect(() => {
+    axiosInstance
+      .get("/doctor-info")
+      .then(({ data }: { data: any }) => {
+        if (data?.data) {
+          setShowPage({ signup: false, login: true, dashboard: false });
+        } else {
+          setShowPage({ signup: true, login: false, dashboard: false });
+        }
+      })
+      .catch(() => {
+        setShowPage({ signup: true, login: false, dashboard: false });
+      });
+  }, []);
+  useEffect(() => {
+    axiosInstance
+      .get("/user/login")
+      .then(({ data }: { data: any }) => {
+        if (data?.data) {
+          setShowPage({ signup: false, login: false, dashboard: true });
+          setUser(data?.data);
+        }
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+  }, []);
 
   return (
     <UserContext.Provider value={{ user, setUser }}>
       <div>
-        {!(showPage.signup || showPage.login || showPage.dashboard) && (
+        {loading && (
           <div className="flex justify-center items-center w-[100vw] h-[100vh]">
             <HashLoader color="#36d7b7" size={250} />
           </div>
