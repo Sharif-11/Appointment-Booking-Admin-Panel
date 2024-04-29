@@ -84,9 +84,15 @@ function App() {
           </div>
         ) : (
           <>
-            {showPage.signup === true && <Signup setShowPage={setShowPage} />}
-            {showPage.login === true && <Login setShowPage={setShowPage} />}
-            {showPage.dashboard === true && <Admin setShowPage={setShowPage} />}
+            {showPage.signup === true && !loading && (
+              <Signup setShowPage={setShowPage} />
+            )}
+            {showPage.login === true && !loading && (
+              <Login setShowPage={setShowPage} />
+            )}
+            {showPage.dashboard === true && !loading && (
+              <Admin setShowPage={setShowPage} />
+            )}
           </>
         )}
       </div>
