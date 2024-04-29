@@ -86,9 +86,7 @@ function App() {
           </div>
         )}
         {showPage.signup === true && <Signup setShowPage={setShowPage} />}
-        {(showPage.login === true || !user) && (
-          <Login setShowPage={setShowPage} />
-        )}
+        {showPage.login === true && <Login setShowPage={setShowPage} />}
         {showPage.dashboard === true && <Admin setShowPage={setShowPage} />}
       </div>
     </UserContext.Provider>
