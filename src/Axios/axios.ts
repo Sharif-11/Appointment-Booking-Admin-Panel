@@ -1,6 +1,7 @@
 import axios from "axios";
 
-export const baseURL = "http://18.138.71.5:5000/api/v1/";
+export const baseURL =
+  "https://appointment-booking-server-3.onrender.com/api/v1/";
 const axiosInstance = axios.create({ baseURL, withCredentials: true });
 export const setHeader = (token: string) => {
   axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
