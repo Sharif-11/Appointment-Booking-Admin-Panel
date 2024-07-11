@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { HashLoader } from "react-spinners";
 import { UserContext } from "../App";
-import axiosInstance from "../Axios/axios";
+import axiosInstance, { setHeader } from "../Axios/axios";
 import loginSchema from "../formValidator/login.yup";
 import CustomField from "./Formik/CustomField";
 import CustomForm from "./Formik/CustomForm";
@@ -33,12 +33,14 @@ const Login = ({
       .then(({ data }) => {
         if (data.status) {
           const { token, ...others } = data.data;
+          // alert(token);
           console.log(others);
           setUser(others);
           // localStorage.setItem("token", token);
           setStatus(true);
           setLoading(false);
           setShowPage({ signup: false, login: false, dashboard: true });
+          setHeader(token);
         }
       })
       .catch((err) => {

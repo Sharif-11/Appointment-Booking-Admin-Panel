@@ -24,7 +24,7 @@ const ProfileSettings = () => {
         setLoading(false);
         setStatus(true);
         setMessage(data?.message);
-        setUser(data?.data);
+        setUser({ ...user, ...data?.data });
       })
       .catch((err: any) => {
         setLoading(false);
